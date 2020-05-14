@@ -90,8 +90,11 @@ public class MessageParser {
         PipelineParameter pipelineParameter = pipeline.getParameters();
         boolean enableLoopbackRemedy = pipelineParameter.isEnableRemedy() && pipelineParameter.isHome()
                                        && pipelineParameter.getRemedyAlgorithm().isLoopback();
-        boolean isLoopback = false;
-        boolean needLoopback = false; // 判断是否属于需要loopback处理的类型，只处理正常otter同步产生的回环数据，因为会有业务方手工屏蔽同步的接口，避免回环
+        // boolean isLoopback = false;
+        // boolean needLoopback = false; // 判断是否属于需要loopback处理的类型，只处理正常otter同步产生的回环数据，因为会有业务方手工屏蔽同步的接口，避免回环
+
+        boolean isLoopback = RetlMarker.isLoopback.get(pipelineId) == null ? false : RetlMarker.isLoopback.get(pipelineId);
+        boolean needLoopback = RetlMarker.needLoopback.get(pipelineId) == null ? false : RetlMarker.needLoopback.get(pipelineId);
 
         long now = new Date().getTime();
         try {
@@ -217,6 +220,9 @@ public class MessageParser {
         } catch (Exception e) {
             throw new SelectException(e);
         }
+
+        RetlMarker.isLoopback.put(pipelineId, isLoopback);
+        RetlMarker.needLoopback.put(pipelineId, needLoopback);
 
         return eventDatas;
     }
