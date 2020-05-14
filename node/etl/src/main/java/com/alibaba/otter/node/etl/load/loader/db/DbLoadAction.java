@@ -100,7 +100,7 @@ public class DbLoadAction implements InitializingBean, DisposableBean {
     private ExecutorService     executor;
     private DbDialectFactory    dbDialectFactory;
     private ConfigClientService configClientService;
-    private int                 batchSize          = 50;
+    private int                 batchSize          = 2000;
     private boolean             useBatch           = true;
     private LoadStatsTracker    loadStatsTracker;
 
